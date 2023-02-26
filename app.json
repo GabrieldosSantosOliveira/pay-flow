@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "pay-flow",
+    "slug": "pay-flow",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

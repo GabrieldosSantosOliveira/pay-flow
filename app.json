@@ -9,9 +9,7 @@
       "backgroundColor": "#FFF",
       "resizeMode": "contain"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFF",

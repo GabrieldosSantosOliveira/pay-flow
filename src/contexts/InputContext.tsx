@@ -5,7 +5,7 @@ import {
   useState,
   Dispatch,
   SetStateAction,
-} from "react";
+} from 'react';
 type IInputContext = {
   isFocus: boolean;
   setIsFocus: Dispatch<SetStateAction<boolean>>;

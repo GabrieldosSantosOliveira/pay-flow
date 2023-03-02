@@ -1,7 +1,7 @@
-import { FC } from "react";
-import { View, ViewProps } from "react-native";
-import { InputProvider } from "../contexts/InputContext";
-import { useInput } from "../hooks/useInput";
+import { FC } from 'react';
+import { View, ViewProps } from 'react-native';
+import { InputProvider } from '../contexts/InputContext';
+import { useInput } from '../hooks/useInput';
 const InputRootBase: FC<ViewProps> = ({ style, ...props }) => {
   const { isFocus } = useInput();
 
@@ -9,13 +9,13 @@ const InputRootBase: FC<ViewProps> = ({ style, ...props }) => {
     <View
       style={[
         {
-          width: "100%",
+          width: '100%',
           height: 56,
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: 'row',
+          alignItems: 'center',
           paddingHorizontal: 10,
           borderRadius: 8,
-          borderColor: "red",
+          borderColor: 'red',
           borderWidth: isFocus ? 5 : 1,
           gap: 10,
         },

@@ -3,8 +3,21 @@
     "name": "pay-flow",
     "slug": "pay-flow",
     "version": "1.0.0",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#FFF",
+      "resizeMode": "contain"
+    },
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFF",
+        "backgroundImage": "./assets/adaptive-icon.png"
+      },
+      "package": "com.gabriel85.payflow"
+    }
   }
 }

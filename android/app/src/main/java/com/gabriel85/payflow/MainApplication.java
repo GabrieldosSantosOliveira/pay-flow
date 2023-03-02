@@ -1,4 +1,4 @@
-package com.payflow;
+package com.gabriel85.payflow;
 
 import android.app.Application;
 import android.content.res.Configuration;

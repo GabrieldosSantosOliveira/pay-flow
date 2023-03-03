@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export const HomePage = () => {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
-  const { SingInWithGoogle } = useAuth();
+  const { SingInWithGoogle, isLoadingUser } = useAuth();
   return (
     <View
       style={{
@@ -58,7 +58,11 @@ export const HomePage = () => {
         >
           Organize seus boletos em um só lugar
         </Text>
-        <ButtonLoginGoogle onPress={SingInWithGoogle} />
+        <ButtonLoginGoogle
+          isLoading={isLoadingUser}
+          onPress={SingInWithGoogle}
+          disabled={isLoadingUser}
+        />
       </View>
     </View>
   );

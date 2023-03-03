@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { View, ViewProps } from 'react-native';
+
 import { InputProvider } from '../contexts/InputContext';
 import { useInput } from '../hooks/useInput';
 const InputRootBase: FC<ViewProps> = ({ style, ...props }) => {

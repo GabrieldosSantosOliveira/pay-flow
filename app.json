@@ -4,18 +4,28 @@
     "slug": "pay-flow",
     "version": "1.0.0",
     "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "orientation": "portrait",
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/splash.png",
       "backgroundColor": "#FFF",
       "resizeMode": "contain"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
       "@react-native-firebase/app",
+      "@react-native-firebase/auth",
       "@react-native-google-signin/google-signin"
     ],
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFF",

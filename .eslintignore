@@ -3,3 +3,5 @@ node_modules
 android
 assets
 yarn.lock
+**/*.js
+**/*.json

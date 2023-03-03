@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+
 import { SplashScreen } from '@components/SplashScreen';
 import { AuthProvider } from '@contexts/AuthContext';
 import { Inter_600SemiBold, Inter_400Regular } from '@expo-google-fonts/inter';
@@ -6,8 +8,7 @@ import {
   Lexend_400Regular,
   useFonts,
 } from '@expo-google-fonts/lexend';
-import { HomePage } from '@screens/HomePage';
-import React from 'react';
+import { Routes } from '@routes/index';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 export default function App() {
   const [isFontsLoaded] = useFonts({
@@ -19,7 +20,7 @@ export default function App() {
   return (
     <AuthProvider>
       <SafeAreaProvider>
-        {isFontsLoaded ? <HomePage /> : <SplashScreen />}
+        {isFontsLoaded ? <Routes /> : <SplashScreen />}
       </SafeAreaProvider>
     </AuthProvider>
   );

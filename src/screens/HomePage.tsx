@@ -1,67 +1,176 @@
-import LogoMini from '@assets/logomini.svg';
-import PersonSvg from '@assets/person.svg';
-import { ButtonLoginGoogle } from '@components/Button/ButtonLoginGoogle';
-import { useAuth } from '@hooks/useAuth';
-import { View, useWindowDimensions, Text } from 'react-native';
+import { Boleto } from '@components/Boleto';
+import { Header } from '@components/Header';
+import { HeaderBar } from '@components/HeaderBar';
+import { HeaderFlatList } from '@components/HeaderFlatList';
+import { FC } from 'react';
+import { FlatList, ListRenderItemInfo } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-export const HomePage = () => {
+export const HomePage: FC = () => {
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
-  const { SingInWithGoogle, isLoadingUser } = useAuth();
+  const data = [
+    {
+      id: '1',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '2',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '3',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '4',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '5',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '6',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '7',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '8',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '9',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '10',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '11',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '12',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '13',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '14',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '15',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '16',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '17',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '18',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '19',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+    {
+      id: '20',
+      nameOfBillet: 'MacBook Pro 13',
+      valueOfBillet: 10000,
+      maturity: new Date(),
+      codeOfBillet: '3456789098765434567',
+    },
+  ];
+  const renderItem: FC<ListRenderItemInfo<(typeof data)[0]>> = ({ item }) => {
+    return <Boleto {...item} />;
+  };
   return (
     <View
       style={{
         flex: 1,
-        paddingTop: insets.top,
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,
-        alignItems: 'center',
+        paddingTop: insets.top,
       }}
     >
-      <View
-        style={{
-          backgroundColor: '#FF941A',
-          width: '100%',
-          height: height * 0.36,
-          alignItems: 'center',
-        }}
-      >
-        <PersonSvg
-          style={{ marginTop: height * 0.08 }}
-          width={208}
-          height={300}
-        />
-      </View>
-      <View
-        style={{
-          marginTop: height * 0.08,
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-          flexDirection: 'column',
-          paddingHorizontal: 40,
-        }}
-      >
-        <LogoMini />
-        <Text
-          style={{
-            textAlign: 'center',
-            color: '#585666',
-            lineHeight: 40,
-            fontSize: 32,
-            fontFamily: 'Lexend_600SemiBold',
-            paddingHorizontal: 30,
-          }}
-        >
-          Organize seus boletos em um só lugar
-        </Text>
-        <ButtonLoginGoogle
-          isLoading={isLoadingUser}
-          onPress={SingInWithGoogle}
-          disabled={isLoadingUser}
-        />
-      </View>
+      <Header />
+      <HeaderBar countOfBoletos={data.length} />
+      <FlatList
+        ListHeaderComponent={() => <HeaderFlatList title="Meus Boletos" />}
+        data={data}
+        keyExtractor={({ id }) => id}
+        renderItem={renderItem}
+      />
     </View>
   );
 };

@@ -1,10 +1,10 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { DashBoard } from '@screens/DashBoard';
+import { HomePage } from '@screens/HomePage';
 const { Navigator, Screen } = createBottomTabNavigator();
 export const AuthRoutes = () => {
   return (
     <Navigator screenOptions={{ headerShown: false }}>
-      <Screen name="DashBoard" component={DashBoard} />
+      <Screen name="HomePage" component={HomePage} />
     </Navigator>
   );
 };

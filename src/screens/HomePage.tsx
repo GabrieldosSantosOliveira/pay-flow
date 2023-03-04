@@ -2,7 +2,6 @@ import LogoMini from '@assets/logomini.svg';
 import PersonSvg from '@assets/person.svg';
 import { ButtonLoginGoogle } from '@components/Button/ButtonLoginGoogle';
 import { useAuth } from '@hooks/useAuth';
-import { StatusBar } from 'expo-status-bar';
 import { View, useWindowDimensions, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export const HomePage = () => {
@@ -20,7 +19,6 @@ export const HomePage = () => {
         alignItems: 'center',
       }}
     >
-      <StatusBar backgroundColor="#BF6415" />
       <View
         style={{
           backgroundColor: '#FF941A',

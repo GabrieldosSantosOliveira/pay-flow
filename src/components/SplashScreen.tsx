@@ -9,7 +9,11 @@ export const SplashScreen = () => {
         alignItems: 'center',
       }}
     >
-      <Image source={Logo} resizeMode="center" />
+      <Image
+        source={Logo}
+        style={{ width: 242, height: 374 }}
+        resizeMode="center"
+      />
     </View>
   );
 };

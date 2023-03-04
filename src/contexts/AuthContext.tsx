@@ -50,10 +50,13 @@ export const AuthProvider: FC<IAuthProvider> = ({ children }) => {
   };
   useEffect(() => {
     configGoogleSingIn();
-    auth().onAuthStateChanged((userState) => {
-      setUser(userState);
+    const subscriber = auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      }
       setIsLoadingAuth(false);
     });
+    return subscriber;
   }, []);
   return (
     <AuthContext.Provider

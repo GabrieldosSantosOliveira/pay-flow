@@ -1,52 +1,60 @@
+import 'react-native-reanimated';
 import { ButtonInsertBoleto } from '@components/Button/ButtonInsertBoleto';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ResponsiveFontScale } from '@utils/ResponsiveFontScale';
-import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner';
-import { Camera } from 'expo-camera';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import {
-  Alert,
   PixelRatio,
+  StyleSheet,
   Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { runOnJS } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  Camera,
+  useCameraDevices,
+  useFrameProcessor,
+} from 'react-native-vision-camera';
+import { BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner';
 export const BarReader: FC = () => {
+  const devices = useCameraDevices();
+  const device = devices.back;
   const insets = useSafeAreaInsets();
+  const [barCode, setBarCode] = useState<string>('');
   const { width, height } = useWindowDimensions();
-  const [hasPermission, setHasPermission] = useState<boolean>(false);
-  const [scanned, setScanned] = useState(false);
+  const { navigate } = useNavigation();
   const { roundToNearestPixel } = PixelRatio;
+  useEffect(() => {
+    if (barCode && barCode.length === 44) {
+      navigate('AddBoleto', { code: barCode });
+    }
+  }, [barCode]);
+  const frameProcessor = useFrameProcessor((frame) => {
+    'worklet';
+    const detectedBarCodes = scanBarcodes(frame, [BarcodeFormat.ITF], {
+      checkInverted: true,
+    });
+
+    runOnJS(setBarCode)(detectedBarCodes[0].content.data as string);
+  }, []);
+
   useFocusEffect(() => {
-    const getBarCodeScannerPermissions = async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+    const getCameraPermissions = async () => {
+      const status = await Camera.getCameraPermissionStatus();
+      if (status !== 'authorized') {
+        navigate('Permission');
+      } else {
+        ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.LANDSCAPE,
+        );
+      }
     };
-    getBarCodeScannerPermissions();
-    async function changeScreenOrientation() {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE,
-      );
-    }
-    changeScreenOrientation();
+    getCameraPermissions();
   });
-  const handleBarCodeScanned: BarCodeScannedCallback = ({
-    type,
-    data,
-    ...props
-  }) => {
-    if (type == '128' && data.length === 44) {
-      Alert.alert(
-        `Bar code with type ${type} and data ${data} has been scanned! ${JSON.stringify(
-          props,
-        )}`,
-      );
-      setScanned(true);
-    }
-  };
-  if (!hasPermission)
+  if (!device) {
     return (
       <View
         style={{
@@ -55,11 +63,11 @@ export const BarReader: FC = () => {
           paddingBottom: insets.bottom,
           paddingLeft: insets.left,
           paddingRight: insets.right,
+          backgroundColor: 'black',
         }}
-      >
-        <Text>De permissão de sua Conta</Text>
-      </View>
+      ></View>
     );
+  }
   return (
     <View
       style={{
@@ -71,15 +79,16 @@ export const BarReader: FC = () => {
       }}
     >
       <Camera
-        onBarCodeScanned={scanned ? null : handleBarCodeScanned}
+        device={device}
+        isActive={true}
+        frameProcessor={frameProcessor}
+        frameProcessorFps={5}
         style={{
-          zIndex: 1,
-          flex: 1,
-        }}
-        barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.itf14],
+          width,
+          height,
         }}
       />
+
       <View
         style={{
           paddingTop: insets.top + 20,
@@ -94,18 +103,17 @@ export const BarReader: FC = () => {
           alignItems: 'center',
         }}
       >
-        <Text
-          style={{
-            color: '#FFFFFF',
-            fontFamily: 'Inter_400Regular',
-            fontSize: ResponsiveFontScale(14),
-          }}
-        >
-          Escaneie o código de barras do boleto
-        </Text>
+        <Text style={styles.title}>Escaneie o código de barras do boleto</Text>
         <View></View>
-        <ButtonInsertBoleto onPress={() => setScanned(false)} />
+        <ButtonInsertBoleto onPress={() => navigate('AddBoleto', {})} />
       </View>
     </View>
   );
 };
+const styles = StyleSheet.create({
+  title: {
+    color: '#FFFFFF',
+    fontFamily: 'Inter_400Regular',
+    fontSize: ResponsiveFontScale(14),
+  },
+});

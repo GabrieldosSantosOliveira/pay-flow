@@ -8,28 +8,35 @@ import {
   createBottomTabNavigator,
   BottomTabBarButtonProps,
 } from '@react-navigation/bottom-tabs';
+import { AddBoleto } from '@screens/AddBoleto';
 import { BarReader } from '@screens/BarReader';
 import { ExtractPage } from '@screens/ExtractPage';
 import { HomePage } from '@screens/HomePage';
+import { Permission } from '@screens/Permission';
+import { Update } from '@screens/Update';
 import { FC } from 'react';
 import { View, PixelRatio } from 'react-native';
 const { Navigator, Screen } = createBottomTabNavigator();
 const AddBoletoButton: FC<BottomTabBarButtonProps> = ({ ...props }) => {
   return (
-    <Touchable {...props}>
-      <View
-        style={{
-          width: 50,
-          height: 50,
-          backgroundColor: '#FF941A',
-          borderRadius: 8,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <MaterialIcons name="add" size={30} color="white" />
-      </View>
-    </Touchable>
+    <View
+      style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
+    >
+      <Touchable {...props}>
+        <View
+          style={{
+            width: 50,
+            height: 50,
+            backgroundColor: '#FF941A',
+            borderRadius: 8,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <MaterialIcons name="add" size={30} color="white" />
+        </View>
+      </Touchable>
+    </View>
   );
 };
 export const AuthRoutes = () => {
@@ -63,6 +70,7 @@ export const AuthRoutes = () => {
         options={{
           tabBarStyle: {
             height: 0,
+            opacity: 0,
           },
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="add-box" size={size} color={color} />
@@ -79,6 +87,30 @@ export const AuthRoutes = () => {
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="filetext1" size={size} color={color} />
           ),
+        }}
+      />
+      <Screen
+        name="AddBoleto"
+        component={AddBoleto}
+        options={{
+          tabBarStyle: { height: 0, opacity: 0 },
+          tabBarButton: () => null,
+        }}
+      />
+      <Screen
+        name="Permission"
+        component={Permission}
+        options={{
+          tabBarStyle: { height: 0, opacity: 0 },
+          tabBarButton: () => null,
+        }}
+      />
+      <Screen
+        name="Update"
+        component={Update}
+        options={{
+          tabBarStyle: { height: 0, opacity: 0 },
+          tabBarButton: () => null,
         }}
       />
     </Navigator>

@@ -1,157 +1,102 @@
-import { Boleto } from '@components/Boleto';
-import { Header } from '@components/Header';
-import { HeaderBar } from '@components/HeaderBar';
-import { HeaderFlatList } from '@components/HeaderFlatList';
-import { FC } from 'react';
-import { FlatList, ListRenderItemInfo } from 'react-native';
-import { View } from 'react-native';
+import { Boleto } from '@components/Boleto/Boleto';
+import { BoletoListEmpty } from '@components/Boleto/BoletoListEmpty';
+import { BoletoNotPay } from '@components/Boleto/BoletoNotPay';
+import { Details } from '@components/Boleto/Details';
+import { Header } from '@components/Header/Header';
+import { HeaderBar } from '@components/Header/HeaderBar';
+import { HeaderFlatList } from '@components/Header/HeaderFlatList';
+import { Loading } from '@components/Loading/Loading';
+import {
+  BottomSheetModalProvider,
+  BottomSheetModal,
+} from '@gorhom/bottom-sheet';
+import { useChangeOrientation } from '@hooks/useChangeOrientation';
+import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import { FC, useState, useEffect, useRef } from 'react';
+import { View, FlatList, ListRenderItemInfo } from 'react-native';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-export const HomePage: FC = () => {
+import { BoletoDto, BoletoViewBody } from 'src/dtos/BoletoDto.dto';
+const HomePageBase: FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [boletos, setBoletos] = useState<BoletoViewBody[]>([]);
+  const [countOfBoletos, setCountOfBoletos] = useState<number>(0);
+  const [boleto, setBoleto] = useState<BoletoViewBody | null>(null);
+  const boletoNotPay = boletos.filter(
+    ({ expiry, paymentStatus }) =>
+      paymentStatus === false && expiry <= new Date(),
+  )[0];
+  const { navigate } = useNavigation();
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const bottomSheetRefBoletoNotPay = useRef<BottomSheetModal>(null);
+  const handleUpdateStatus = (paymentStatus: boolean, id: string) => {
+    if (id) {
+      firestore()
+        .collection<BoletoDto>('boletos')
+        .doc(id)
+        .update({ paymentStatus });
+      bottomSheetRefBoletoNotPay.current?.close();
+    }
+  };
+  const handleDelete = (id: string) => {
+    bottomSheetRef.current?.snapToIndex(0);
+    setBoletos((prev) => prev.filter((boleto) => boleto.id !== id));
+  };
+  const handleDeleteBoleto = (id: string) => {
+    bottomSheetRefBoletoNotPay.current?.close();
+    firestore().collection('boletos').doc(id).delete();
+  };
   const insets = useSafeAreaInsets();
-  const data = [
-    {
-      id: '1',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '2',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '3',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '4',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '5',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '6',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '7',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '8',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '9',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '10',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '11',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '12',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '13',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '14',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '15',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '16',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '17',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '18',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '19',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-    {
-      id: '20',
-      nameOfBillet: 'MacBook Pro 13',
-      valueOfBillet: 10000,
-      maturity: new Date(),
-      codeOfBillet: '3456789098765434567',
-    },
-  ];
-  const renderItem: FC<ListRenderItemInfo<(typeof data)[0]>> = ({ item }) => {
-    return <Boleto {...item} />;
+  useEffect(() => {
+    if (boletoNotPay) {
+      bottomSheetRefBoletoNotPay.current?.present();
+    }
+  }, [boletos]);
+  function updateScreenBoleto(id: string) {
+    bottomSheetRef.current?.close();
+    navigate('Update', { id });
+  }
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection<BoletoDto>('boletos')
+      .onSnapshot((snapshot) => {
+        if (snapshot) {
+          const data = snapshot.docs
+            .map((doc) => {
+              const boleto = doc.data();
+              if (boleto) {
+                const { code, created_at, expiry, name, value, paymentStatus } =
+                  boleto;
+                return {
+                  id: doc.id,
+                  code,
+                  created_at,
+                  paymentStatus,
+                  expiry: new Date(expiry),
+                  name,
+                  value,
+                };
+              }
+              return null;
+            })
+            .filter((value) => Boolean(value));
+          setBoletos(data as BoletoViewBody[] | []);
+          setCountOfBoletos(snapshot.size);
+        }
+        setIsLoading(false);
+      });
+
+    return () => subscriber();
+  }, []);
+  useChangeOrientation();
+  const renderItem: FC<ListRenderItemInfo<BoletoViewBody>> = ({ item }) => {
+    function showModalBoleto() {
+      setBoleto(item);
+      bottomSheetRef.current?.present();
+    }
+
+    return <Boleto {...item} showModalBoleto={showModalBoleto} />;
   };
   return (
     <View
@@ -164,13 +109,37 @@ export const HomePage: FC = () => {
       }}
     >
       <Header />
-      <HeaderBar countOfBoletos={data.length} />
-      <FlatList
-        ListHeaderComponent={() => <HeaderFlatList title="Meus Boletos" />}
-        data={data}
-        keyExtractor={({ id }) => id}
-        renderItem={renderItem}
+      <HeaderBar countOfBoletos={countOfBoletos} />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          ListHeaderComponent={() => <HeaderFlatList title="Meus Boletos" />}
+          data={boletos}
+          keyExtractor={({ id }) => id}
+          renderItem={renderItem}
+          ListEmptyComponent={() => (
+            <BoletoListEmpty title="Você ainda não possui boletos cadastrados" />
+          )}
+        />
+      )}
+      <Details
+        updateScreenBoleto={updateScreenBoleto}
+        handleDelete={handleDelete}
+        ref={bottomSheetRef}
+        {...boleto}
+      />
+      <BoletoNotPay
+        handleDeleteBoleto={handleDeleteBoleto}
+        handleUpdateStatus={handleUpdateStatus}
+        ref={bottomSheetRefBoletoNotPay}
+        {...boletoNotPay}
       />
     </View>
   );
 };
+export const HomePage = gestureHandlerRootHOC(() => (
+  <BottomSheetModalProvider>
+    <HomePageBase />
+  </BottomSheetModalProvider>
+));

@@ -3,7 +3,12 @@ export declare global {
     interface RootParamList {
       HomePage: undefined;
       ExtractPage: undefined;
-      AddBoleto: undefined;
+      AddBoleto: { code?: string };
+      BarReader: undefined;
+      Permission: undefined;
+      Update: {
+        id: string;
+      };
     }
   }
 }

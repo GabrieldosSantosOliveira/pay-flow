@@ -1,18 +1,88 @@
-import { Boleto } from '@components/Boleto';
-import { Header } from '@components/Header';
-import { HeaderFlatList } from '@components/HeaderFlatList';
-import { FC } from 'react';
-import { ListRenderItemInfo } from 'react-native';
-import { FlatList } from 'react-native';
-import { View } from 'react-native';
+import { Boleto } from '@components/Boleto/Boleto';
+import { BoletoListEmpty } from '@components/Boleto/BoletoListEmpty';
+import { Details } from '@components/Boleto/Details';
+import { Header } from '@components/Header/Header';
+import { HeaderFlatList } from '@components/Header/HeaderFlatList';
+import { Loading } from '@components/Loading/Loading';
+import {
+  BottomSheetModalProvider,
+  BottomSheetModal,
+} from '@gorhom/bottom-sheet';
+import { useChangeOrientation } from '@hooks/useChangeOrientation';
+import firestore from '@react-native-firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import { FC, useState, useRef, useEffect } from 'react';
+import { View, FlatList, ListRenderItemInfo } from 'react-native';
+import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BoletoDto, BoletoViewBody } from 'src/dtos/BoletoDto.dto';
 
-import { data } from './../../data';
-export const ExtractPage: FC = () => {
-  const insets = useSafeAreaInsets();
-  const renderItem: FC<ListRenderItemInfo<(typeof data)[0]>> = ({ item }) => {
-    return <Boleto {...item} />;
+const ExtractPageBase: FC = () => {
+  const [boletos, setBoletos] = useState<BoletoViewBody[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [countOfBoletosPay, setCountOfBoletosPay] = useState<number>(0);
+  const [boleto, setBoleto] = useState<BoletoViewBody>();
+  const bottomSheetRef = useRef<BottomSheetModal | null>(null);
+  const { navigate } = useNavigation();
+  const handleDelete = (id: string) => {
+    bottomSheetRef.current?.snapToIndex(0);
+    setBoletos((prev) => prev.filter((boleto) => boleto.id !== id));
   };
+  const insets = useSafeAreaInsets();
+  function updateScreenBoleto(id: string) {
+    bottomSheetRef.current?.close();
+    navigate('Update', { id });
+  }
+  const renderItem: FC<ListRenderItemInfo<BoletoViewBody>> = ({ item }) => {
+    function showModalBoleto() {
+      setBoleto(item);
+      bottomSheetRef.current?.present();
+    }
+    return <Boleto {...item} showModalBoleto={showModalBoleto} />;
+  };
+  useChangeOrientation();
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection<BoletoDto>('boletos')
+      .onSnapshot((snapshot) => {
+        if (snapshot) {
+          const data = snapshot.docs
+            .map((doc) => {
+              const boleto = doc.data();
+              if (boleto) {
+                const { code, created_at, expiry, name, value, paymentStatus } =
+                  boleto;
+                return {
+                  id: doc.id,
+                  code,
+                  created_at,
+                  expiry: new Date(expiry),
+                  paymentStatus,
+                  name,
+                  value,
+                } as BoletoViewBody;
+              }
+            })
+            .filter((boleto) => boleto);
+
+          setBoletos(data as BoletoViewBody[] | []);
+        }
+        setIsLoading(false);
+      });
+    const subscriberCount = firestore()
+      .collection('boletos')
+      .where('paymentStatus', '==', true)
+      .onSnapshot((snapshot) => {
+        if (snapshot) {
+          setCountOfBoletosPay(snapshot.size);
+        }
+      });
+
+    return () => {
+      subscriber();
+      subscriberCount();
+    };
+  }, []);
   return (
     <View
       style={{
@@ -24,17 +94,36 @@ export const ExtractPage: FC = () => {
       }}
     >
       <Header />
-      <FlatList
-        ListHeaderComponent={() => (
-          <HeaderFlatList
-            subTitle={`${data.length} pagos`}
-            title="Meus Extratos"
-          />
-        )}
-        data={data}
-        keyExtractor={({ id }) => id}
-        renderItem={renderItem}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          ListHeaderComponent={() => (
+            <HeaderFlatList
+              subTitle={`${countOfBoletosPay} pagos`}
+              title="Meus Extratos"
+            />
+          )}
+          data={boletos}
+          keyExtractor={({ id }) => id}
+          renderItem={renderItem}
+          ListEmptyComponent={() => (
+            <BoletoListEmpty title="Você ainda não possui extratos cadastrados" />
+          )}
+        />
+      )}
+      <Details
+        updateScreenBoleto={updateScreenBoleto}
+        handleDelete={handleDelete}
+        ref={bottomSheetRef}
+        {...boleto}
       />
     </View>
   );
 };
+
+export const ExtractPage = gestureHandlerRootHOC(() => (
+  <BottomSheetModalProvider>
+    <ExtractPageBase />
+  </BottomSheetModalProvider>
+));

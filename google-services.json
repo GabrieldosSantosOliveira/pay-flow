@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "896845180246-iejubg1l77l4f6rf6v1gkl0srq02k7nr.apps.googleusercontent.com",
+          "client_id": "896845180246-ikbk0rsl6l8ik70gs8al63kt5h2ik3rs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gabriel85.payflow",
+            "certificate_hash": "ad0a1e8b13b00eb490bdf1c11875d0e008cdd0a0"
+          }
+        },
+        {
+          "client_id": "896845180246-j0o8gogul50fah8iligeecpuvtbourt4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.gabriel85.payflow",

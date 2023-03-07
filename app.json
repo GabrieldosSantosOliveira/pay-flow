@@ -37,9 +37,7 @@
         }
       ]
     ],
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFF",
@@ -47,9 +45,7 @@
       },
       "package": "com.gabriel85.payflow",
       "googleServicesFile": "./google-services.json",
-      "permissions": [
-        "android.permission.CAMERA"
-      ]
+      "permissions": ["android.permission.CAMERA"]
     },
     "ios": {
       "bundleIdentifier": "com.gabriel85.payflow",

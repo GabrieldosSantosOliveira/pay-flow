@@ -3,7 +3,6 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      'react-native-reanimated/plugin',
       'inline-dotenv',
       [
         'module-resolver',
@@ -18,6 +17,12 @@ module.exports = function (api) {
             '@assets': './src/assets',
             '@utils': './src/utils',
           },
+        },
+      ],
+      [
+        'react-native-reanimated/plugin',
+        {
+          globals: ['__scanCodes'],
         },
       ],
     ],

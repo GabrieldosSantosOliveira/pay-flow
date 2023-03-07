@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
       "@components/*": ["./src/components/*"],

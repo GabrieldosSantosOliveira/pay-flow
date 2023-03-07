@@ -49,7 +49,7 @@ export const AddBoleto: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dateWithoutFormat, setDateWithoutFormat] = useState<Date>();
   const insets = useSafeAreaInsets();
-  const { control, handleSubmit, setValue } = useForm<IForm>();
+  const { control, handleSubmit, setValue, reset } = useForm<IForm>();
   const { height } = useWindowDimensions();
   const { navigate } = useNavigation();
   const ref = useRef<TextInput | null>(null);
@@ -65,6 +65,9 @@ export const AddBoleto: FC = () => {
     if (code) {
       setValue('code', code);
     }
+    return () => {
+      reset();
+    };
   });
   const hideDatePicker = () => {
     setDatePickerVisibility(false);

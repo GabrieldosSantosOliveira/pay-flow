@@ -1,4 +1,6 @@
 import 'react-native-gesture-handler';
+import 'react-native-reanimated';
+
 import { SplashScreen } from '@components/SplashScreen';
 import { AuthProvider } from '@contexts/AuthContext';
 import {

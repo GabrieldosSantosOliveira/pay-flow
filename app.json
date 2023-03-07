@@ -37,18 +37,31 @@
         }
       ]
     ],
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFF",
         "backgroundImage": "./assets/adaptive-icon.png"
       },
       "package": "com.gabriel85.payflow",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "ios": {
       "bundleIdentifier": "com.gabriel85.payflow",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Pay Flow needs access to your Camera."
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "604c5ff7-433b-42f0-b408-076a16d88db6"
+      }
     }
   }
 }

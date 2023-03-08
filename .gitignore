@@ -54,3 +54,5 @@ yarn-error.log
 web-build/
 dist/
 .env
+google-services.json
+GoogleService-Info.plist

@@ -21,9 +21,7 @@ import {
   View,
   Text,
   KeyboardAvoidingView,
-  ScrollView,
   PixelRatio,
-  useWindowDimensions,
   Alert,
   StyleSheet,
   TextInput,
@@ -50,7 +48,6 @@ export const AddBoleto: FC = () => {
   const [dateWithoutFormat, setDateWithoutFormat] = useState<Date>();
   const insets = useSafeAreaInsets();
   const { control, handleSubmit, setValue, reset } = useForm<IForm>();
-  const { height } = useWindowDimensions();
   const { navigate } = useNavigation();
   const ref = useRef<TextInput | null>(null);
   const route = useRoute<RouteProp<ParamList, 'AddBoleto'>>();
@@ -65,9 +62,6 @@ export const AddBoleto: FC = () => {
     if (code) {
       setValue('code', code);
     }
-    return () => {
-      reset();
-    };
   });
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
@@ -84,11 +78,6 @@ export const AddBoleto: FC = () => {
       setIsLoading(true);
       if (!code) {
         return Alert.alert('Preencha o código de barras');
-      }
-      if (code.length !== 44) {
-        return Alert.alert(
-          'Preencha o código de barras com 44 caracteres sem o digito verificador',
-        );
       }
       if (!dateWithoutFormat) {
         return Alert.alert('Preencha a data de vencimento');
@@ -113,6 +102,7 @@ export const AddBoleto: FC = () => {
           created_at: firestore.FieldValue.serverTimestamp(),
         });
       Alert.alert('Boleto', 'Boleto registrado com sucesso');
+      reset({ code: '', expiry: '', name: '', value: '' });
       navigate('HomePage');
     } catch (error) {
       return Alert.alert('Registrar', 'Não foi possível registrar o boleto');
@@ -121,117 +111,115 @@ export const AddBoleto: FC = () => {
     }
   };
   return (
-    <ScrollView contentContainerStyle={{ minHeight: height + insets.top }}>
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'flex-end',
-            paddingTop: insets.top,
-            paddingBottom: insets.bottom,
-            paddingLeft: insets.left,
-            paddingRight: insets.right,
-          }}
-        >
-          <HeaderAddBoleto />
-          <Text style={styles.header}>Preencha os dados do boleto</Text>
-          <View style={styles.form}>
-            <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
-              <AntDesign name="filetext1" size={24} color="#FF941A" />
-              <LineBorder />
-              <Controller
-                name="name"
-                control={control}
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <Input
-                    placeholder="Nome do boleto"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                  />
-                )}
-              />
-            </InputRoot>
-            <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
-              <Octicons name="x-circle" size={24} color="#FF941A" />
-              <LineBorder />
-              <Controller
-                name="expiry"
-                control={control}
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <Input
-                    placeholder="Vencimento"
-                    ref={ref}
-                    onBlur={onBlur}
-                    onFocus={() => {
-                      setDatePickerVisibility(true);
-                    }}
-                    onChangeText={onChange}
-                    value={value}
-                  />
-                )}
-              />
-            </InputRoot>
-
-            <DateTimePickerModal
-              isVisible={isDatePickerVisible}
-              mode="date"
-              onConfirm={handleConfirm}
-              onCancel={hideDatePicker}
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-end',
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        }}
+      >
+        <HeaderAddBoleto />
+        <Text style={styles.header}>Preencha os dados do boleto</Text>
+        <View style={styles.form}>
+          <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
+            <AntDesign name="filetext1" size={24} color="#FF941A" />
+            <LineBorder />
+            <Controller
+              name="name"
+              control={control}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <Input
+                  placeholder="Nome do boleto"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
             />
+          </InputRoot>
+          <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
+            <Octicons name="x-circle" size={24} color="#FF941A" />
+            <LineBorder />
+            <Controller
+              name="expiry"
+              control={control}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <Input
+                  placeholder="Vencimento"
+                  ref={ref}
+                  onBlur={onBlur}
+                  onFocus={() => {
+                    setDatePickerVisibility(true);
+                  }}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+            />
+          </InputRoot>
 
-            <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
-              <Ionicons name="md-wallet-outline" size={24} color="#FF941A" />
-              <LineBorder />
-              <Controller
-                name="value"
-                control={control}
-                defaultValue="0"
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <Input
-                    placeholder="Valor"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={MoneyFormat(Number(value.replace(/\D/g, '')) || 0)}
-                    keyboardType="number-pad"
-                  />
-                )}
-              />
-            </InputRoot>
-            <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
-              <FontAwesome name="barcode" size={24} color="#FF941A" />
-              <LineBorder />
-              <Controller
-                name="code"
-                control={control}
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <Input
-                    placeholder="Código"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    keyboardType="number-pad"
-                  />
-                )}
-              />
-            </InputRoot>
-          </View>
-        </View>
-        <View style={styles.footer}>
-          <ButtonTabBar
-            type="SECONDARY"
-            title="Cancelar"
-            onPress={() => navigate('HomePage')}
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
           />
-          <LineBorder />
-          <ButtonTabBar
-            title="Cadastrar"
-            onPress={handleSubmit(handleSaveBoleto)}
-            isLoading={isLoading}
-          />
+
+          <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
+            <Ionicons name="md-wallet-outline" size={24} color="#FF941A" />
+            <LineBorder />
+            <Controller
+              name="value"
+              control={control}
+              defaultValue="0"
+              render={({ field: { onBlur, onChange, value } }) => (
+                <Input
+                  placeholder="Valor"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={MoneyFormat(Number(value.replace(/\D/g, '')) || 0)}
+                  keyboardType="number-pad"
+                />
+              )}
+            />
+          </InputRoot>
+          <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
+            <FontAwesome name="barcode" size={24} color="#FF941A" />
+            <LineBorder />
+            <Controller
+              name="code"
+              control={control}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <Input
+                  placeholder="Código"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  keyboardType="number-pad"
+                />
+              )}
+            />
+          </InputRoot>
         </View>
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </View>
+      <View style={styles.footer}>
+        <ButtonTabBar
+          type="SECONDARY"
+          title="Cancelar"
+          onPress={() => navigate('HomePage')}
+        />
+        <LineBorder />
+        <ButtonTabBar
+          title="Cadastrar"
+          onPress={handleSubmit(handleSaveBoleto)}
+          isLoading={isLoading}
+        />
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({
@@ -262,6 +250,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     height: PixelRatio.getPixelSizeForLayoutSize(20),
     position: 'absolute',
+    width: '100%',
     left: 0,
     right: 0,
     bottom: 0,

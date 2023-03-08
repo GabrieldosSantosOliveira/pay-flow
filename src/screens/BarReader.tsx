@@ -28,7 +28,7 @@ export const BarReader: FC = () => {
   const { navigate } = useNavigation();
   const { roundToNearestPixel } = PixelRatio;
   useEffect(() => {
-    if (barCode && barCode.length === 44) {
+    if (barCode) {
       navigate('AddBoleto', { code: barCode });
     }
   }, [barCode]);
@@ -37,7 +37,6 @@ export const BarReader: FC = () => {
     const detectedBarCodes = scanBarcodes(frame, [BarcodeFormat.ITF], {
       checkInverted: true,
     });
-
     runOnJS(setBarCode)(detectedBarCodes[0].content.data as string);
   }, []);
 

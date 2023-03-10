@@ -1,7 +1,7 @@
 <p align="center">
 <img width="200px"  src="https://user-images.githubusercontent.com/86084272/223594711-50dffd63-f4bb-485e-81a0-8f714d818ae9.png"/> </p>
 
- ## <p align="center"> GithubSearch <a href="LICENSE"> <img  src="https://img.shields.io/static/v1?label=License&message=MIT&color=&labelColor=202024" alt="License"></a> </p>
+ ## <p align="center"> Pay Flow <a href="LICENSE"> <img  src="https://img.shields.io/static/v1?label=License&message=MIT&color=&labelColor=202024" alt="License"></a> </p>
 O Pay Flow é uma aplicação desenvolvida que permite gerenciar os seus boletos 
 ## 🔖 Demonstração
 

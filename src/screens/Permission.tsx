@@ -1,16 +1,16 @@
 import { ButtonSecondary } from '@components/Button/ButtonSecondary';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { useChangeOrientation } from '@hooks/useChangeOrientation';
-import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { ScreensStack } from '@routes/auth.routes';
 import { ResponsiveFontScale } from '@utils/ResponsiveFontScale';
+import { Camera } from 'expo-camera';
 import { FC } from 'react';
 import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Camera } from 'react-native-vision-camera';
-export const Permission: FC = () => {
+export const Permission: FC<StackScreenProps<ScreensStack, 'Permission'>> = ({
+  navigation,
+}) => {
   const insets = useSafeAreaInsets();
-  const { navigate } = useNavigation();
-  useChangeOrientation();
   return (
     <View
       style={{
@@ -39,16 +39,16 @@ export const Permission: FC = () => {
         <ButtonSecondary
           icon={<MaterialIcons name="lock" size={24} />}
           onPress={async () => {
-            const status = await Camera.requestCameraPermission();
-            if (status === 'authorized') {
-              navigate('BarReader');
+            const status = await Camera.requestCameraPermissionsAsync();
+            if (status.granted) {
+              navigation.navigate('BarReader');
             }
           }}
           text="Permitir"
         />
         <ButtonSecondary
           onPress={() => {
-            navigate('AddBoleto', {});
+            navigation.navigate('AddBoleto', {});
           }}
           type="SECONDARY"
           text="Inserir manualmente"

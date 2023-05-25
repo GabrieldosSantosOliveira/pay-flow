@@ -10,10 +10,9 @@ import {
   BottomSheetModalProvider,
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
-import { useChangeOrientation } from '@hooks/useChangeOrientation';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC, useState, useEffect, useRef, useCallback } from 'react';
 import { View, FlatList, ListRenderItemInfo } from 'react-native';
 import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -61,43 +60,38 @@ const HomePageBase: FC = () => {
     const subscriber = firestore()
       .collection<BoletoDto>('boletos')
       .onSnapshot((snapshot) => {
-        if (snapshot) {
-          const data = snapshot.docs
-            .map((doc) => {
-              const boleto = doc.data();
-              if (boleto) {
-                const { code, created_at, expiry, name, value, paymentStatus } =
-                  boleto;
-                return {
-                  id: doc.id,
-                  code,
-                  created_at,
-                  paymentStatus,
-                  expiry: new Date(expiry),
-                  name,
-                  value,
-                };
-              }
-              return null;
-            })
-            .filter((value) => Boolean(value));
-          setBoletos(data as BoletoViewBody[] | []);
-          setCountOfBoletos(snapshot.size);
-        }
+        const data = snapshot.docs.map((doc) => {
+          const boleto = doc.data();
+          const { code, created_at, expiry, name, value, paymentStatus } =
+            boleto;
+          return {
+            id: doc.id,
+            code,
+            created_at,
+            paymentStatus,
+            expiry: new Date(expiry),
+            name,
+            value,
+          };
+        });
+        setBoletos(data);
+        setCountOfBoletos(snapshot.size);
         setIsLoading(false);
       });
 
     return () => subscriber();
   }, []);
-  useChangeOrientation();
-  const renderItem: FC<ListRenderItemInfo<BoletoViewBody>> = ({ item }) => {
-    function showModalBoleto() {
-      setBoleto(item);
-      bottomSheetRef.current?.present();
-    }
+  const renderItem: FC<ListRenderItemInfo<BoletoViewBody>> = useCallback(
+    ({ item }) => {
+      function showModalBoleto() {
+        setBoleto(item);
+        bottomSheetRef.current?.present();
+      }
 
-    return <Boleto {...item} showModalBoleto={showModalBoleto} />;
-  };
+      return <Boleto {...item} showModalBoleto={showModalBoleto} />;
+    },
+    [],
+  );
   return (
     <View
       style={{

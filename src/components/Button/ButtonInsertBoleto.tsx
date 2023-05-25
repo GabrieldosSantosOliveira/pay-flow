@@ -5,7 +5,7 @@ import { Text, TouchableOpacityProps, View } from 'react-native';
 
 export const ButtonInsertBoleto: FC<TouchableOpacityProps> = ({ ...props }) => {
   return (
-    <Touchable {...props}>
+    <Touchable style={{ width: '100%' }} {...props}>
       <View
         style={{
           backgroundColor: 'white',

@@ -1,7 +1,6 @@
-import { Touchable } from '@components/Touchable';
 import { ResponsiveFontScale } from '@utils/ResponsiveFontScale';
 import { FC, ReactNode } from 'react';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 import { PixelRatio, View, GestureResponderEvent } from 'react-native';
 type Props = {
   type?: 'PRIMARY' | 'SECONDARY';
@@ -16,7 +15,7 @@ export const ButtonWarning: FC<Props> = ({
   icon,
 }) => {
   return (
-    <Touchable onPress={onPress}>
+    <TouchableOpacity style={{ width: '100%' }} onPress={onPress}>
       <View
         style={{
           width: '100%',
@@ -42,6 +41,6 @@ export const ButtonWarning: FC<Props> = ({
         </Text>
         <View />
       </View>
-    </Touchable>
+    </TouchableOpacity>
   );
 };

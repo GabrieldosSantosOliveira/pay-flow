@@ -3,6 +3,9 @@ import { ResponsiveFontScale } from '@utils/ResponsiveFontScale';
 import { View, Image, Text, PixelRatio } from 'react-native';
 export const Header = () => {
   const { user } = useAuth();
+
+  const defaultIcon =
+    'https://gravatar.com/avatar/4558b04758aa1cc5530e22612215aa85?s=400&d=robohash&r=x';
   return (
     <View
       style={{
@@ -33,7 +36,7 @@ export const Header = () => {
           >
             Olá,{' '}
           </Text>
-          {user.displayName}
+          {user?.displayName}
         </Text>
         <Text
           style={{
@@ -46,7 +49,7 @@ export const Header = () => {
         </Text>
       </View>
       <Image
-        source={{ uri: user.photoURL }}
+        source={{ uri: user?.photoURL || defaultIcon }}
         style={{
           width: PixelRatio.getPixelSizeForLayoutSize(20),
           height: PixelRatio.getPixelSizeForLayoutSize(20),

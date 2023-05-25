@@ -8,7 +8,6 @@ import {
   BottomSheetModalProvider,
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
-import { useChangeOrientation } from '@hooks/useChangeOrientation';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { FC, useState, useRef, useEffect } from 'react';
@@ -40,7 +39,6 @@ const ExtractPageBase: FC = () => {
     }
     return <Boleto {...item} showModalBoleto={showModalBoleto} />;
   };
-  useChangeOrientation();
   useEffect(() => {
     const subscriber = firestore()
       .collection<BoletoDto>('boletos')

@@ -21,21 +21,7 @@
       ],
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "@react-native-google-signin/google-signin",
-      [
-        "react-native-vision-camera",
-        {
-          "cameraPermissionText": "Pay Flow needs access to your Camera."
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "kotlinVersion": "1.6.20"
-          }
-        }
-      ]
+      "@react-native-google-signin/google-signin"
     ],
     "assetBundlePatterns": ["**/*"],
     "android": {

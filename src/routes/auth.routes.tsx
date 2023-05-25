@@ -1,117 +1,37 @@
-import { Touchable } from '@components/Touchable';
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-  AntDesign,
-} from '@expo/vector-icons';
-import {
-  createBottomTabNavigator,
-  BottomTabBarButtonProps,
-} from '@react-navigation/bottom-tabs';
+import { NavigatorScreenParams } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AddBoleto } from '@screens/AddBoleto';
 import { BarReader } from '@screens/BarReader';
-import { ExtractPage } from '@screens/ExtractPage';
-import { HomePage } from '@screens/HomePage';
 import { Permission } from '@screens/Permission';
 import { Update } from '@screens/Update';
-import { FC } from 'react';
-import { View, PixelRatio } from 'react-native';
-const { Navigator, Screen } = createBottomTabNavigator();
-const AddBoletoButton: FC<BottomTabBarButtonProps> = ({ ...props }) => {
-  return (
-    <View
-      style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
-    >
-      <Touchable {...props}>
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            backgroundColor: '#FF941A',
-            borderRadius: 8,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <MaterialIcons name="add" size={30} color="white" />
-        </View>
-      </Touchable>
-    </View>
-  );
+
+import { BottomTabsRoutes, BottomTabsScreens } from './bottomTabs.routes';
+
+export type ScreensStack = {
+  BarReader: undefined;
+  Tabs: NavigatorScreenParams<BottomTabsScreens>;
+  AddBoleto: { code?: string };
+  Update: {
+    id: string;
+  };
+  Permission: undefined;
 };
+const { Navigator, Screen } = createNativeStackNavigator<ScreensStack>();
 export const AuthRoutes = () => {
   return (
-    <Navigator
-      screenOptions={{
-        tabBarActiveTintColor: '#FF941A',
-        headerShown: false,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          height: PixelRatio.getPixelSizeForLayoutSize(30),
-        },
-      }}
-    >
+    <Navigator initialRouteName="Tabs" screenOptions={{ headerShown: false }}>
       <Screen
-        name="HomePage"
-        component={HomePage}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="home-minus"
-              size={size}
-              color={color}
-            />
-          ),
-        }}
+        name="Tabs"
+        component={BottomTabsRoutes}
+        options={{ presentation: 'modal' }}
       />
+      <Screen name="AddBoleto" component={AddBoleto} />
+      <Screen name="Update" component={Update} />
+      <Screen name="Permission" component={Permission} />
       <Screen
         name="BarReader"
         component={BarReader}
-        options={{
-          tabBarStyle: {
-            height: 0,
-            opacity: 0,
-          },
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="add-box" size={size} color={color} />
-          ),
-          tabBarButton: ({ ...props }) => {
-            return <AddBoletoButton {...props} />;
-          },
-        }}
-      />
-      <Screen
-        name="ExtractPage"
-        component={ExtractPage}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="filetext1" size={size} color={color} />
-          ),
-        }}
-      />
-      <Screen
-        name="AddBoleto"
-        component={AddBoleto}
-        options={{
-          tabBarStyle: { height: 0, opacity: 0 },
-          tabBarButton: () => null,
-        }}
-      />
-      <Screen
-        name="Permission"
-        component={Permission}
-        options={{
-          tabBarStyle: { height: 0, opacity: 0 },
-          tabBarButton: () => null,
-        }}
-      />
-      <Screen
-        name="Update"
-        component={Update}
-        options={{
-          tabBarStyle: { height: 0, opacity: 0 },
-          tabBarButton: () => null,
-        }}
+        options={{ presentation: 'modal', orientation: 'landscape' }}
       />
     </Navigator>
   );

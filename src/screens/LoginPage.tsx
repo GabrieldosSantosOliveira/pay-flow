@@ -2,14 +2,12 @@ import LogoMini from '@assets/logomini.svg';
 import PersonSvg from '@assets/person.svg';
 import { ButtonLoginGoogle } from '@components/Button/ButtonLoginGoogle';
 import { useAuth } from '@hooks/useAuth';
-import { useChangeOrientation } from '@hooks/useChangeOrientation';
 import { View, useWindowDimensions, Text, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export const LoginPage = () => {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const { SingInWithGoogle, isLoadingUser } = useAuth();
-  useChangeOrientation();
   return (
     <View
       style={{

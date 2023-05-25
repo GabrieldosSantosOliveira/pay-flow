@@ -16,7 +16,7 @@ export const ButtonSecondary: FC<Props> = ({
   icon,
 }) => {
   return (
-    <Touchable onPress={onPress}>
+    <Touchable style={{ width: '100%' }} onPress={onPress}>
       <View
         style={{
           width: '100%',

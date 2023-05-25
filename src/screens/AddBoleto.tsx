@@ -1,21 +1,19 @@
 import { ButtonTabBar } from '@components/Button/ButtonTabBar';
 import { HeaderAddBoleto } from '@components/Header/HeaderAddBoleto';
+import { ControlledInput } from '@components/Input/ControlledInput';
 import { Input } from '@components/Input/Input';
 import { InputRoot } from '@components/Input/InputRoot';
 import { LineBorder } from '@components/LineBorder';
 import { AntDesign, FontAwesome, Ionicons, Octicons } from '@expo/vector-icons';
 import firestore from '@react-native-firebase/firestore';
-import {
-  RouteProp,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ScreensStack } from '@routes/auth.routes';
 import { DateZone } from '@services/DateZone';
 import { MoneyFormat } from '@services/MoneyFormat';
 import { ResponsiveFontScale } from '@utils/ResponsiveFontScale';
-import * as ScreenOrientation from 'expo-screen-orientation';
 import { FC, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   View,
@@ -36,33 +34,24 @@ export interface IForm {
   code: string;
 }
 
-type ParamList = {
-  AddBoleto: {
-    code?: string;
-  };
-};
-export const AddBoleto: FC = () => {
+export const AddBoleto: FC<
+  NativeStackScreenProps<ScreensStack, 'AddBoleto'>
+> = ({ navigation, route }) => {
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dateWithoutFormat, setDateWithoutFormat] = useState<Date>();
   const insets = useSafeAreaInsets();
-  const { control, handleSubmit, setValue, reset } = useForm<IForm>();
-  const { navigate } = useNavigation();
+  const { control, handleSubmit, setValue } = useForm<IForm>();
   const ref = useRef<TextInput | null>(null);
-  const route = useRoute<RouteProp<ParamList, 'AddBoleto'>>();
-  const code = route.params?.code;
-  useFocusEffect(() => {
-    async function changeScreenOrientation() {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT,
-      );
-    }
-    changeScreenOrientation();
-    if (code) {
-      setValue('code', code);
-    }
-  });
+  const { code } = route.params;
+  useFocusEffect(
+    useCallback(() => {
+      if (code) {
+        setValue('code', code);
+      }
+    }, [code]),
+  );
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
     ref.current?.blur();
@@ -102,8 +91,7 @@ export const AddBoleto: FC = () => {
           created_at: firestore.FieldValue.serverTimestamp(),
         });
       Alert.alert('Boleto', 'Boleto registrado com sucesso');
-      reset({ code: '', expiry: '', name: '', value: '' });
-      navigate('HomePage');
+      navigation.navigate('Tabs', { screen: 'HomePage' });
     } catch (error) {
       return Alert.alert('Registrar', 'Não foi possível registrar o boleto');
     } finally {
@@ -128,17 +116,10 @@ export const AddBoleto: FC = () => {
           <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
             <AntDesign name="filetext1" size={24} color="#FF941A" />
             <LineBorder />
-            <Controller
+            <ControlledInput
               name="name"
               control={control}
-              render={({ field: { onBlur, onChange, value } }) => (
-                <Input
-                  placeholder="Nome do boleto"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
+              placeholder="Nome do boleto"
             />
           </InputRoot>
           <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
@@ -190,18 +171,12 @@ export const AddBoleto: FC = () => {
           <InputRoot _focus={styles.inputFocus} style={styles.inputBorder}>
             <FontAwesome name="barcode" size={24} color="#FF941A" />
             <LineBorder />
-            <Controller
-              name="code"
+            <ControlledInput
               control={control}
-              render={({ field: { onBlur, onChange, value } }) => (
-                <Input
-                  placeholder="Código"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  keyboardType="number-pad"
-                />
-              )}
+              name="code"
+              placeholder="Código"
+              defaultValue={code}
+              keyboardType="number-pad"
             />
           </InputRoot>
         </View>
@@ -210,7 +185,7 @@ export const AddBoleto: FC = () => {
         <ButtonTabBar
           type="SECONDARY"
           title="Cancelar"
-          onPress={() => navigate('HomePage')}
+          onPress={() => navigation.navigate('Tabs', { screen: 'HomePage' })}
         />
         <LineBorder />
         <ButtonTabBar

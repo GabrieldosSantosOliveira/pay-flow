@@ -1,14 +1,7 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
+import { ScreensStack } from '@routes/stack.routes';
 export declare global {
   namespace ReactNavigation {
-    interface RootParamList {
-      HomePage: undefined;
-      ExtractPage: undefined;
-      AddBoleto: { code?: string };
-      BarReader: undefined;
-      Permission: undefined;
-      Update: {
-        id: string;
-      };
-    }
+    interface RootParamList extends ScreensStack {}
   }
 }
